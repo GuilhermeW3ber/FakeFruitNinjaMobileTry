@@ -1,4 +1,5 @@
-//Estados de Jogo
+//Eu adaptei o jogo do ruit ninja que havia feito para que funcionasse em qualquer tela, contudo minha cabeça travou na hora de fazer com que o dedo pudesse ser reconhecido como o mouse... Teria como enviar uma mensagem de retorno me orientando como finalizar esse detalhe?
+//  https://guilhermew3ber.github.io/FakeFruitNinjaMobileTry/
 var PLAY=1;
 var END=0;
 var gameState=1;
