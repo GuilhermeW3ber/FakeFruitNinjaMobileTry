@@ -1,4 +1,5 @@
-//Eu adaptei o jogo do ruit ninja que havia feito para que funcionasse em qualquer tela, contudo minha cabeça travou na hora de fazer com que o dedo pudesse ser reconhecido como o mouse... Teria como enviar uma mensagem de retorno me orientando como finalizar esse detalhe?
+//A senhora não tem noção o trabalho que deu até eu ter a ideia de calcular o y da imagem até chegar no final... KKKKKKKKKKKK Tive que usar o frameCount, a imagem era muito grande kkkkkkkkkkkkk
+//Acho que a adaptação ficou legal, mas vou diminuir o tamanho natural do jogo, a animação da faca ficou muito fluida com a resolução mais baixa
 //  https://guilhermew3ber.github.io/FakeFruitNinjaMobileTry/
 var PLAY=1;
 var END=0;
@@ -6,13 +7,13 @@ var gameState=1;
 
 var knife,fruit ,monster,fruitGroup,monsterGroup, score,r,randomFruit, position;
 var knifeImage , fruit1, fruit2 ,fruit3,fruit4, monsterImage, gameOverImage, gameOverAn;
-var gameOverSound ,knifeSwoosh;
+var gameOverSound ,knifeGroup;
 var fundo, fundoImg
 var frag;
 var boom;
 
 function preload(){
-  fundoImg=loadImage("fundo.png");
+  fundoImg=loadImage("fundoInf.png");
   knifeImage = loadImage("Blade.png");
   monsterImage = loadAnimation("bomba1.png","bomba2.png")
   fruit1 = loadImage("laranja.png");
@@ -24,6 +25,8 @@ function preload(){
   fragImg= loadImage("fragment.png")
   //gameOverSound = loadSound("gameover.mp3")
   //knifeSwooshSound = loadSound("knifeSwoosh.mp3")
+
+  knifeGroup= new Group;
 }
 
 
@@ -33,13 +36,10 @@ function setup() {
   fundo=createSprite(windowWidth/2,windowHeight/2,20,20);
   fundo.addImage(fundoImg);
   fundo.scale=windowWidth/500
-
-  knife=createSprite(40,200,20,20);
-  knife.addImage(knifeImage);
-  knife.scale=0.4
-  knife.setCollider("rectangle",0,0,40,40);
-
+  fundo.velocityY=-10;
+  fundo.setCollider("rectangle",0,0,40,40);
   score=0;
+
   fruitGroup=createGroup();
   monsterGroup=createGroup();
   
@@ -47,14 +47,19 @@ function setup() {
 
 function draw() {
   background("lightblue");
-  console.log(knife);
+  if(World.frameCount %10===0){
+    console.log(fundo.y);
+  }
+  if(fundo.y<-10000){
+    fundo.y=681.5;
+
+  }  
   if(gameState===PLAY){
     
     fruits();
     bomb();
+    
 
-    knife.y=World.mouseY;
-    knife.x=World.mouseX;
   
     if(fruitGroup.isTouching(knife)){
       fruitGroup.destroyEach();
@@ -74,7 +79,6 @@ function draw() {
         fruitGroup.setVelocityXEach(0);
         monsterGroup.setVelocityXEach(0);
         
-        //knife.addImage(gameOverImage);
         knife.destroy();
         knife.x=300;
         knife.y=300;
@@ -113,10 +117,8 @@ function bomb(){
 
 function fruits(){
   if(World.frameCount%80===0){
-    //position = Math.round(random(1,2));
     fruit=createSprite(random(windowWidth),windowHeight,20,20);
-    console.log(position)
-     fruit.scale=0.2;
+    fruit.scale=0.2;
 
     if(fruit.y=-200){
       fruit.velocityY=(10+(score/4));
@@ -145,5 +147,21 @@ function fruits(){
     fruitGroup.add(fruit);
       
   }
+}
+
+function mouseDragged(){
+  knife=createSprite(40,200,20,20);
+  knife.x=World.mouseX;
+  knife.y=World.mouseY;
+  knife.addImage(knifeImage);
+  knife.scale=0.4;
+  knife.setCollider("rectangle",0,0,40,40);
+  knife.lifetime=2
+  knifeGroup.add(knife)
+}
+function mouseReleased(){
+  knifeGroup.destroyEach();
+
+  
 }
 
